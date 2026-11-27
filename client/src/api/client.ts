@@ -230,6 +230,53 @@ export const getMockResponse = (config: InternalAxiosRequestConfig | any): any =
     return { success: true, data: MOCK_ALERTS };
   }
 
+  // Imports: CSV Template
+  if (url.includes('/import/template')) {
+    const templateContent =
+      'orderId,storeId,itemCount,totalAmount,placedAt,assignDuration,pickDuration,packDuration,handoverDuration,rideDuration,delayReason\n' +
+      'BLK-DEMO-101,BLR-KOR-01,3,280,2026-11-20T10:15:00Z,18,140,42,35,175,NONE\n' +
+      'BLK-DEMO-102,DEL-IND-02,6,540,2026-11-20T11:00:00Z,25,230,85,60,220,PACKING_QUEUE\n' +
+      'BLK-DEMO-103,BOM-AND-03,2,190,2026-11-20T11:30:00Z,15,110,38,30,165,NONE\n' +
+      'BLK-DEMO-104,BLR-IND-04,5,420,2026-11-20T12:00:00Z,22,185,55,48,210,RIDER_WAIT';
+    return templateContent;
+  }
+
+  // Imports: Process CSV Orders
+  if (url.includes('/import/orders') && method === 'post') {
+    let rowCount = 5;
+    try {
+      const parsed = typeof config.data === 'string' ? JSON.parse(config.data) : config.data;
+      if (parsed?.csvString) {
+        const lines = parsed.csvString.trim().split('\n');
+        rowCount = Math.max(1, lines.length - 1);
+      }
+    } catch {}
+
+    return {
+      success: true,
+      message: `Successfully imported ${rowCount} orders into fulfillment analyzer.`,
+      data: {
+        importedCount: rowCount,
+        skippedCount: 0,
+        errors: [],
+      },
+    };
+  }
+
+  // Analytics: Weekly SLA Digest
+  if (url.includes('/analytics/weekly-digest')) {
+    return {
+      success: true,
+      data: {
+        slaCompliance: 91.8,
+        totalOrders: 14820,
+        avgFulfillmentSec: 432,
+        p90FulfillmentSec: 574,
+        breaches: 1215,
+      },
+    };
+  }
+
   return { success: true, data: [] };
 };
 

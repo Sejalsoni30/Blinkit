@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../api/client.js';
 import { useStore } from '../context/StoreContext.js';
@@ -6,6 +6,7 @@ import { KpiCard } from '../components/common/KpiCard.js';
 import { StageFunnel } from '../components/funnel/StageFunnel.js';
 import { LoadingSkeleton } from '../components/common/LoadingSkeleton.js';
 import { ExportButton } from '../components/common/ExportButton.js';
+import { WeeklyDigestModal } from '../components/common/WeeklyDigestModal.js';
 import {
   CheckCircle2,
   Clock,
@@ -14,6 +15,7 @@ import {
   Repeat,
   Package,
   TrendingUp,
+  FileText,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -28,7 +30,8 @@ import {
 } from 'recharts';
 
 export const DashboardPage: React.FC = () => {
-  const { selectedStoreId, startDate, endDate } = useStore();
+  const { selectedStoreId, startDate, endDate, stores } = useStore();
+  const [isDigestOpen, setIsDigestOpen] = useState(false);
 
   const queryParams = new URLSearchParams();
   if (selectedStoreId && selectedStoreId !== 'ALL') queryParams.append('storeId', selectedStoreId);
@@ -113,12 +116,23 @@ export const DashboardPage: React.FC = () => {
           </p>
         </div>
 
-        <ExportButton
-          data={chartData}
-          filename="blinkit_fulfillment_overview"
-          title="Fulfillment Executive Summary"
-          columns={exportColumns}
-        />
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsDigestOpen(true)}
+            className="px-3.5 py-1.5 bg-yellow-400 hover:bg-yellow-500 text-gray-950 font-bold text-xs rounded-lg shadow-xs transition-colors flex items-center gap-1.5"
+            title="Open Weekly SLA Performance Digest"
+          >
+            <FileText className="w-3.5 h-3.5" />
+            <span>Weekly SLA Digest</span>
+          </button>
+
+          <ExportButton
+            data={chartData}
+            filename="blinkit_fulfillment_overview"
+            title="Fulfillment Executive Summary"
+            columns={exportColumns}
+          />
+        </div>
       </div>
 
       {/* 5 Prominent Success Metrics as requested */}
@@ -265,6 +279,14 @@ export const DashboardPage: React.FC = () => {
           </span>
         </div>
       </div>
+
+      {/* Weekly Operations SLA Digest Modal */}
+      <WeeklyDigestModal
+        isOpen={isDigestOpen}
+        onClose={() => setIsDigestOpen(false)}
+        storeName={selectedStoreId === 'ALL' ? 'National Fleet (All Stores)' : stores.find(s => s.storeId === selectedStoreId)?.name || selectedStoreId}
+        storeId={selectedStoreId}
+      />
     </div>
   );
 };
