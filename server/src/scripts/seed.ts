@@ -309,9 +309,8 @@ export const seedData = async (force = false, totalOrdersToGenerate = 10000) => 
   await Rider.insertMany(ridersList);
 
   // 5. Seed Orders (10,000 realistic orders across 30 days)
-  logger.info('Simulating ~10,000 realistic orders over the past 30 days...');
+  logger.info(`Simulating ~${totalOrdersToGenerate} realistic orders over the past 30 days...`);
   const ordersBatch: Partial<IOrder>[] = [];
-  const totalOrdersToGenerate = 10000;
   const now = new Date();
   const rainDays = [3, 11, 22];
 
