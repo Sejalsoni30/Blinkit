@@ -1,0 +1,15 @@
+{
+  "short_name": "Blinkit Analyzer",
+  "name": "Blinkit Dark Store Fulfillment Analyzer",
+  "icons": [
+    {
+      "src": "/blinkit-logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "64x64 128x128 256x256"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#F8CB46",
+  "theme_color": "#F8CB46",
+  "display": "standalone"
+}

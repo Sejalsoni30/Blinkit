@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="blinkitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#blinkitGrad)"/>
+  <text x="28" y="48" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="42" text-anchor="middle" fill="#0F172A">b</text>
+  <circle cx="44" cy="20" r="5.5" fill="#0C831F"/>
+  <circle cx="44" cy="20" r="2.5" fill="#34D399"/>
+</svg>
