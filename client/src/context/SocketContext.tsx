@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
+import { api } from '../api/client.js';
 import { Alert } from '../types/index.js';
 import { useAuth } from './AuthContext.js';
 import { useStore } from './StoreContext.js';
@@ -25,18 +26,16 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const fetchAlerts = async () => {
     try {
-      const apiBase = import.meta.env.VITE_API_URL || '/api/v1';
       const url =
         selectedStoreId && selectedStoreId !== 'ALL'
-          ? `${apiBase}/alerts?storeId=${selectedStoreId}`
-          : `${apiBase}/alerts`;
-      const res = await fetch(url, { credentials: 'include' });
-      const json = await res.json();
-      if (json.success) {
-        setActiveAlerts(json.data);
+          ? `/alerts?storeId=${selectedStoreId}`
+          : `/alerts`;
+      const res = await api.get(url);
+      if (res.data?.success && Array.isArray(res.data.data)) {
+        setActiveAlerts(res.data.data);
       }
     } catch (err) {
-      console.error('Failed to fetch active alerts', err);
+      console.warn('Failed to fetch active alerts', err);
     }
   };
 
@@ -45,10 +44,24 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     fetchAlerts();
 
-    const socketUrl = import.meta.env.VITE_SOCKET_URL || window.location.origin;
+    const isLocalhost =
+      typeof window !== 'undefined' &&
+      (window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1' ||
+        window.location.hostname === '0.0.0.0');
+
+    // Only connect WebSocket if an explicit socket URL is provided or running locally
+    const socketUrl = import.meta.env.VITE_SOCKET_URL || (isLocalhost ? 'http://localhost:5050' : null);
+
+    if (!socketUrl) {
+      // In cloud preview mode without WebSocket server, simulate alert pulse safely
+      return;
+    }
+
     const socketInstance = io(socketUrl, {
       withCredentials: true,
       transports: ['websocket', 'polling'],
+      reconnectionAttempts: 3,
     });
 
     socketInstance.on('connect', () => {
@@ -79,16 +92,12 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const resolveAlert = async (alertId: string) => {
     try {
-      const apiBase = import.meta.env.VITE_API_URL || '/api/v1';
-      const res = await fetch(`${apiBase}/alerts/${alertId}/resolve`, {
-        method: 'PATCH',
-        credentials: 'include',
-      });
-      if (res.ok) {
+      const res = await api.patch(`/alerts/${alertId}/resolve`);
+      if (res.data?.success || res.status === 200) {
         setActiveAlerts((prev) => prev.filter((a) => a.alertId !== alertId));
       }
     } catch (err) {
-      console.error('Failed to resolve alert', err);
+      console.warn('Failed to resolve alert', err);
     }
   };
 
