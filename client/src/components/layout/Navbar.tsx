@@ -16,7 +16,7 @@ export const Navbar: React.FC = () => {
     <header className="h-16 bg-white border-b border-gray-200 sticky top-0 z-40 px-6 flex items-center justify-between shadow-xs">
       {/* Brand & Store Selector */}
       <div className="flex items-center gap-6">
-        <div className="flex items-center gap-3">
+        <Link to="/dashboard" className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-blinkit-yellow flex items-center justify-center font-black text-xl text-blinkit-black shadow-inner">
             b
           </div>
@@ -29,7 +29,7 @@ export const Navbar: React.FC = () => {
             </div>
             <p className="text-[11px] text-gray-500 font-medium">10-Minute SLA Fulfillment Analyzer</p>
           </div>
-        </div>
+        </Link>
 
         {/* Store Selector */}
         <div className="hidden md:flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 text-xs text-gray-700">

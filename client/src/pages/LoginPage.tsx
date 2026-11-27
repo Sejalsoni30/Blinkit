@@ -17,7 +17,7 @@ export const LoginPage: React.FC = () => {
       setLoading(true);
       setError(null);
       await login(email, password);
-      navigate('/');
+      navigate('/dashboard');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Login failed. Please verify credentials.');
     } finally {
@@ -30,7 +30,7 @@ export const LoginPage: React.FC = () => {
       setLoading(true);
       setError(null);
       await switchUser(role, storeId);
-      navigate('/');
+      navigate('/dashboard');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Quick login failed');
     } finally {

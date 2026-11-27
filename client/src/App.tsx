@@ -6,6 +6,7 @@ import { StoreProvider } from './context/StoreContext.js';
 import { SocketProvider } from './context/SocketContext.js';
 
 import { Layout } from './components/layout/Layout.js';
+import { LandingPage } from './pages/LandingPage.js';
 import { DashboardPage } from './pages/DashboardPage.js';
 import { OrdersPage } from './pages/OrdersPage.js';
 import { RootCausePage } from './pages/RootCausePage.js';
@@ -18,6 +19,7 @@ import { InsightsPage } from './pages/InsightsPage.js';
 import { AlertsPage } from './pages/AlertsPage.js';
 import { StoreComparisonPage } from './pages/StoreComparisonPage.js';
 import { LoginPage } from './pages/LoginPage.js';
+import { NotFoundPage } from './pages/NotFoundPage.js';
 import { LoadingSkeleton } from './components/common/LoadingSkeleton.js';
 
 const queryClient = new QueryClient({
@@ -56,31 +58,37 @@ export const App: React.FC = () => {
           <SocketProvider>
             <BrowserRouter>
               <Routes>
-                <Route path="/login" element={<LoginPage />} />
+                {/* Public Landing Page */}
+                <Route path="/" element={<LandingPage />} />
 
+                {/* Public Auth Routes */}
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<Navigate to="/login" replace />} />
+
+                {/* Protected Dark Store Operations Routes */}
                 <Route
-                  path="/"
                   element={
                     <ProtectedRoute>
                       <Layout />
                     </ProtectedRoute>
                   }
                 >
-                  <Route index element={<DashboardPage />} />
-                  <Route path="funnel" element={<DashboardPage />} />
-                  <Route path="orders" element={<OrdersPage />} />
-                  <Route path="root-causes" element={<RootCausePage />} />
-                  <Route path="sku-aisle" element={<SkuAislePage />} />
-                  <Route path="pickers" element={<PickerPage />} />
-                  <Route path="staffing" element={<StaffingPage />} />
-                  <Route path="inventory" element={<InventoryPage />} />
-                  <Route path="predict" element={<PredictorPage />} />
-                  <Route path="insights" element={<InsightsPage />} />
-                  <Route path="alerts" element={<AlertsPage />} />
-                  <Route path="comparison" element={<StoreComparisonPage />} />
+                  <Route path="/dashboard" element={<DashboardPage />} />
+                  <Route path="/funnel" element={<DashboardPage />} />
+                  <Route path="/orders" element={<OrdersPage />} />
+                  <Route path="/root-causes" element={<RootCausePage />} />
+                  <Route path="/sku-aisle" element={<SkuAislePage />} />
+                  <Route path="/pickers" element={<PickerPage />} />
+                  <Route path="/staffing" element={<StaffingPage />} />
+                  <Route path="/inventory" element={<InventoryPage />} />
+                  <Route path="/predict" element={<PredictorPage />} />
+                  <Route path="/insights" element={<InsightsPage />} />
+                  <Route path="/alerts" element={<AlertsPage />} />
+                  <Route path="/comparison" element={<StoreComparisonPage />} />
                 </Route>
 
-                <Route path="*" element={<Navigate to="/" replace />} />
+                {/* 404 Route */}
+                <Route path="*" element={<NotFoundPage />} />
               </Routes>
             </BrowserRouter>
           </SocketProvider>

@@ -21,7 +21,7 @@ export const Sidebar: React.FC = () => {
   const isAdminOrAnalyst = user?.role === 'ADMIN' || user?.role === 'ANALYST';
 
   const navItems = [
-    { name: 'Executive Dashboard', path: '/', icon: LayoutDashboard },
+    { name: 'Executive Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { name: 'Fulfillment Funnel', path: '/funnel', icon: GitCommit },
     { name: 'Order Explorer', path: '/orders', icon: PackageSearch },
     { name: 'Root-Cause Analysis', path: '/root-causes', icon: AlertTriangle },
