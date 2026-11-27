@@ -1,0 +1,14 @@
+{
+  "name": "blinkit-fulfillment-analyzer",
+  "version": "1.0.0",
+  "description": "Blinkit Dark Store Fulfillment Analyzer - Operations analytics platform for quick-commerce 10-minute SLA",
+  "scripts": {
+    "dev": "concurrently -k -n \"SERVER,CLIENT\" -c \"cyan,green\" \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "build": "npm run build --prefix server && npm run build --prefix client",
+    "seed": "npm run seed --prefix server",
+    "test": "npm run test --prefix server && npm run test --prefix client"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
