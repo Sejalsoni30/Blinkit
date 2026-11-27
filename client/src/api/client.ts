@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+export const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
+
 export const api = axios.create({
-  baseURL: '/api/v1',
+  baseURL: API_BASE_URL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -21,7 +23,7 @@ api.interceptors.response.use(
     ) {
       originalRequest._retry = true;
       try {
-        await axios.post('/api/v1/auth/refresh', {}, { withCredentials: true });
+        await axios.post(`${API_BASE_URL}/auth/refresh`, {}, { withCredentials: true });
         return api(originalRequest);
       } catch (refreshError) {
         window.dispatchEvent(new CustomEvent('auth:expired'));

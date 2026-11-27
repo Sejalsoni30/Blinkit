@@ -25,10 +25,11 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const fetchAlerts = async () => {
     try {
+      const apiBase = import.meta.env.VITE_API_URL || '/api/v1';
       const url =
         selectedStoreId && selectedStoreId !== 'ALL'
-          ? `/api/v1/alerts?storeId=${selectedStoreId}`
-          : '/api/v1/alerts';
+          ? `${apiBase}/alerts?storeId=${selectedStoreId}`
+          : `${apiBase}/alerts`;
       const res = await fetch(url, { credentials: 'include' });
       const json = await res.json();
       if (json.success) {
@@ -44,7 +45,8 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     fetchAlerts();
 
-    const socketInstance = io(window.location.origin, {
+    const socketUrl = import.meta.env.VITE_SOCKET_URL || window.location.origin;
+    const socketInstance = io(socketUrl, {
       withCredentials: true,
       transports: ['websocket', 'polling'],
     });
@@ -77,7 +79,8 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const resolveAlert = async (alertId: string) => {
     try {
-      const res = await fetch(`/api/v1/alerts/${alertId}/resolve`, {
+      const apiBase = import.meta.env.VITE_API_URL || '/api/v1';
+      const res = await fetch(`${apiBase}/alerts/${alertId}/resolve`, {
         method: 'PATCH',
         credentials: 'include',
       });
